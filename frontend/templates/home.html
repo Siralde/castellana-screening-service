@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<!-- This file is for the home page specifically -->
+
+<head>
+    <meta charset="utf-8">
+    <title>StartupHealthScore Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='../static/home.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">StartupHealthScore</div>
+        <div class="description">
+            <h2>Welcome to StartupHealthScore</h2>
+            <p>Predict the potential success of your startup within the next 5 years based on various metrics and
+                classifications.</p>
+        </div>
+        <a href="{{ url_for('predict') }}" class="btn">Predict Company Success</a>
+        <!-- Leads to prediction endpoint page -->
+        <div style="margin-top: 40px;">
+            <a href="{{ url_for('search_companies') }}" class="btn">Search Companies</a>
+            <!-- Leads to search companies endpoint page -->
+        </div>
+    </div>
+
+</body>
+
+</html>

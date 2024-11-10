@@ -1,0 +1,14 @@
+numpy
+pandas
+matplotlib
+scikit-learn
+python-dotenv
+psutil
+gunicorn
+fastapi[all]
+uvicorn
+pydantic
+python-multipart
+passlib
+bcrypt
+python-jose
