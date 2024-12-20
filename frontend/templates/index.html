@@ -259,14 +259,18 @@
     <script>
         function calculatePrediction(event) {
             event.preventDefault();
-
             const formData = new FormData(event.target);
             
-            // API call
+            // Convert FormData to a plain object
+            const data = Object.fromEntries(formData);
 
+            // API call
             fetch('/predict', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
             })
                 .then(response => response.json())
                 .then(data => {

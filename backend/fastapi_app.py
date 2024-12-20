@@ -1,4 +1,3 @@
-
 import os
 import numpy as np
 import pandas as pd
@@ -143,56 +142,35 @@ def clean_numeric_input(value: str) -> float:
 
 
 @app.post("/predict", response_class=JSONResponse)
-async def predict(
-    # current_user: dict = Depends(get_current_active_user),
-    company_country_code: str = Form(...),
-    company_region: str = Form(...),
-    company_city: str = Form(...),
-    company_category_list: str = Form(...),
-    company_last_round_investment_type: str = Form(...),
-    company_num_funding_rounds: int = Form(...),
-    company_total_funding_usd: str = Form(...),  
-    company_age_months: int = Form(...),
-    company_has_facebook_url: int = Form(0),
-    company_has_twitter_url: int = Form(0),
-    company_has_linkedin_url: int = Form(0),
-    company_round_count: int = Form(...),
-    company_raised_amount_usd: str = Form(...),  
-    company_last_round_raised_amount_usd: str = Form(...),  
-    company_last_round_post_money_valuation: str = Form(...),  
-    company_last_round_timelapse_months: int = Form(...),
-    company_last_round_investor_count: int = Form(...),
-    company_founders_dif_country_count: int = Form(...),
-    company_founders_male_count: int = Form(...),
-    company_founders_female_count: int = Form(...),
-    company_founders_degree_count_total: int = Form(...),
-    company_founders_degree_count_max: int = Form(...)
-):
-    
+async def predict(request: Request):
     try:
+        # Get the JSON data from the request body
+        request_data = await request.json()
+        print("New company info collected:" + request_data['company_country_code'])
+
         new_company_info = {
-            'country_code': company_country_code,
-            'region': company_region,
-            'city': company_city,
-            'category_list': company_category_list,
-            'last_round_investment_type': company_last_round_investment_type,
-            'num_funding_rounds': company_num_funding_rounds,
-            'total_funding_usd': clean_numeric_input(company_total_funding_usd),
-            'age_months': company_age_months,
-            'has_facebook_url': company_has_facebook_url,
-            'has_twitter_url': company_has_twitter_url,
-            'has_linkedin_url': company_has_linkedin_url,
-            'round_count': company_round_count,
-            'raised_amount_usd': clean_numeric_input(company_raised_amount_usd),
-            'last_round_raised_amount_usd': clean_numeric_input(company_last_round_raised_amount_usd),
-            'last_round_post_money_valuation': clean_numeric_input(company_last_round_post_money_valuation),
-            'last_round_timelapse_months': company_last_round_timelapse_months,
-            'last_round_investor_count': company_last_round_investor_count,
-            'founders_dif_country_count': company_founders_dif_country_count,
-            'founders_male_count': company_founders_male_count,
-            'founders_female_count': company_founders_female_count,
-            'founders_degree_count_total': company_founders_degree_count_total,
-            'founders_degree_count_max': company_founders_degree_count_max
+            'country_code': request_data['company_country_code'],
+            'region': request_data['company_region'],
+            'city': request_data['company_city'],
+            'category_list': request_data['company_category_list'],
+            'has_facebook_url': int(request_data['company_has_facebook_url']),
+            'has_twitter_url': int(request_data['company_has_twitter_url']),
+            'has_linkedin_url': int(request_data['company_has_linkedin_url']),
+            'last_round_investment_type': request_data['company_last_round_investment_type'],
+            'num_funding_rounds': int(request_data['company_num_funding_rounds']),
+            'total_funding_usd': float(request_data['company_total_funding_usd'].replace(',', '')),
+            'age_months': int(request_data['company_age_months']),
+            'round_count': int(request_data['company_num_funding_rounds']),
+            'raised_amount_usd': float(request_data['company_total_funding_usd'].replace(',', '')),
+            'last_round_raised_amount_usd': float(request_data['company_last_round_raised_amount_usd'].replace(',', '')),
+            'last_round_post_money_valuation': float(request_data['company_last_round_post_money_valuation'].replace(',', '')),
+            'last_round_timelapse_months': int(request_data['company_last_round_timelapse_months']),
+            'last_round_investor_count': int(request_data['company_last_round_investor_count']),
+            'founders_dif_country_count': int(request_data['company_founders_dif_country_count']),
+            'founders_male_count': int(request_data['company_founders_male_count']),
+            'founders_female_count': int(request_data['company_founders_female_count']),
+            'founders_degree_count_total': int(request_data['company_founders_degree_count_total']),
+            'founders_degree_count_max': int(request_data['company_founders_degree_count_max'])
         }
 
         def encode_and_handle_unseen(column, value):
@@ -229,6 +207,8 @@ async def predict(
     except Exception as e:
         print(f"An error occurred: {e}")
         return JSONResponse(content={"error": str(e)})
+    
+
 
 # Search Companies
 @app.get("/search_companies", response_class=HTMLResponse)
